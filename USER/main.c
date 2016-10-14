@@ -1,30 +1,32 @@
 #include "led.h"
 #include "delay.h"
 #include "sys.h"
+#include "usart.h"
 #include "lcd.h"
+#include "key.h"
+#include "usmart.h" 
+#include "malloc.h"  
+#include "MMC_SD.h" 
+#include "ff.h"  
+#include "exfuns.h"
+#include "text.h"	
+#include "timer.h"
 
-//ALIENTEK miniSTM32开发板实验1
-//跑马灯实验  
-//技术支持：www.openedv.com
-//广州市星翼电子科技有限公司
- int main(void)
- {	
-	delay_init();	    	 //延时函数初始化	  
-	LED_Init();		  	//初始化与LED连接的硬件接口
-	LCD_GPIOInit();
-	delay_ms(200);
-	initial_lcd();
-	delay_ms(300);
-	clear_screen();
+ 
+int main(void)
+{  
+	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);		//设置中断优先级分组2 
+	delay_init();	    	 							//延时函数初始化	  
+	uart_init(115200);	 								//串口初始化为9600			 
+	LED_Init();         								//LED初始化	 													      													    
+	//usmart_dev.init(72);								//usmart初始化	
+ 	mem_init();											//初始化内存池	    
+	
 	while(1)
 	{
-		display_graphic_16x16( 0, 0, "hello");
-		LED0=0;
-		LED1=1;
-		delay_ms(300);	 //延时300ms
-		LED0=1;
-		LED1=0;
-		delay_ms(300);	//延时300ms
+		delay_ms(500);
+		LED0 = !LED0;
+		printf("LED status:\r\n");
 	}
- }
-
+	
+}
