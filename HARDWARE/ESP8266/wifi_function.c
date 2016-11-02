@@ -2,9 +2,9 @@
 #include "wifi_config.h"
 #include "delay.h"
 
-//#include <string.h> 
-//#include <stdbool.h>
-#include  <stdlib.h>
+#include <string.h> 
+#include <stdbool.h>
+#include <stdlib.h>
 
 
 /*
@@ -61,7 +61,7 @@ void ESP8266_AT_Test ( void )
 	
 	delay_ms ( 1500 ); 
 	
-	while ( ! ESP8266_Cmd ( "AT", "OK", NULL, 200 ) ) ESP8266_Rst ();  	
+	while ( ! ESP8266_Cmd ( "AT", "OK", NULL, 200) );  	
 
 }
 

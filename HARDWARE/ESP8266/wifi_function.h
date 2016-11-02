@@ -4,12 +4,12 @@
 
 #include "stm32f10x.h"
 #include "wifi_config.h"
+#include "usart.h"
 #include <stdbool.h>
 
 
-#define     ESP8266_Usart( fmt, ... )           USART2_printf ( USART2, fmt, ##__VA_ARGS__ ) 
-#define     PC_Usart( fmt, ... )                printf ( fmt, ##__VA_ARGS__ )
-
+#define     ESP8266_Usart( fmt, ... )           USART_printf ( USART2, fmt, ##__VA_ARGS__ ) 
+#define     PC_Usart( fmt, ... )                USART_printf ( USART1, fmt, ##__VA_ARGS__ )
 #define     ESP8266_CH_HIGH_LEVEL()             GPIO_SetBits( GPIOA, GPIO_Pin_0 )
 #define     ESP8266_CH_LOW_LEVEL()              GPIO_ResetBits( GPIOA, GPIO_Pin_0 )
 

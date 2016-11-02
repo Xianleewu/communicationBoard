@@ -69,7 +69,7 @@ extern struct  STRUCT_USARTx_Fram                                  //´®¿ÚÊý¾ÝÖ¡µ
 
 void WiFi_Config( void );
 void USART2_DMA_Config(u32 RxBuff);
-void NVIC_Configuration( void );
+void USART2_Config( void );
 
 
 #endif    /* __WIFI_CONFIG_H */
