@@ -1,6 +1,8 @@
 
 #include "wifi_config.h"
 #include "wifi_function.h"
+#include "led.h"
+#include "lcd.h"
 
 struct  STRUCT_USARTx_Fram strEsp8266_Fram_Record = { 0 };
 
@@ -11,8 +13,8 @@ void NVIC_Configuration_Uart2( void )
 	
 	/* Enable the USART2 Interrupt */
 	NVIC_InitStructure.NVIC_IRQChannel = USART2_IRQn;	 
-	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 3;
-	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 3;
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
 
@@ -65,8 +67,8 @@ void USART2_Config( void )
 void USART2_IRQHandler( void )
 {	
 	char ch;
-	
-	//PC_Usart("WIFI module got data ! \r\n");
+	LED1 = !LED1;
+	//display_GB2312_string(7, 1, "WIFI module got data");
 	
 	if(USART_GetITStatus(USART2, USART_IT_RXNE) != RESET)//¶ÁÊý¾Ý¼Ä´æÆ÷·Ç¿Õ
 	{

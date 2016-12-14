@@ -13,8 +13,8 @@
 //* 数据类型 */
 typedef enum{
 	STA,
-  AP,
-  STA_AP  
+	AP,
+	STA_AP  
 } ENUM_Net_ModeTypeDef;
 
 

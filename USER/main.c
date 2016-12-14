@@ -11,40 +11,56 @@
 #include "exfuns.h"
 #include "text.h"	
 #include "timer.h"
+#include "string.h"
 #include "wifi_config.h"
 #include "wifi_function.h"
 
  
 int main(void)
 {  
-	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);		//设置中断优先级分组2 
+	char *recStr = NULL;
+	ENUM_NetPro_TypeDef tcpConn = enumTCP;
 	delay_init();	    	 							//延时函数初始化	  
+	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);		//设置中断优先级分组2 
 	uart_init(115200);	 								//串口初始化115200
 	USART2_Config();
 	LED_Init();         								//LED初始化	 													      													    
  	mem_init();											//初始化内存池	    
-	
-	LED_Init();
+
+#ifndef ATK_V33	
 	JLX12864G_086_GPIOInit();
 	initial_lcd();
 	clear_screen();
 	delay_ms(200);
-	display_GB2312_string(1,1,"WIFI RFID Zigbee");
 	
-	display_GB2312_string(3,1,"WIFI testing....");
+	display_GB2312_string(1, 1, "WIFI RFID Zigbee");
+	display_GB2312_string(3, 1, "WIFI testing....");
+	display_GB2312_string(5, 1, "WIFI testing ok.");
 	
-	//ESP8266_Rst();
-	
+#endif
+
 	ESP8266_AT_Test();
-	printf("ESP8266 init finished !\r\n");
-	ESP8266_BuildAP ("VideoStream","34567890", "3");
+	ESP8266_BuildAP ("smartAP","34567890", "3");
+
+	PC_Usart("All init finished \n");
+	
+	ESP8266_Enable_MultipleId(ENABLE);
+	
+	ESP8266_StartOrShutServer ( ENABLE, "8080", "1000000");
+	
+	while(!ESP8266_Link_Server(tcpConn, "192.168.4.2", "8080", Multiple_ID_0))
+	{
+		
+	}
 	
 	while(1)
 	{
-		delay_ms(500);
-		LED0 = !LED0;
-		USART_printf(USART1,"this string out from uart1 \r\n");
-		//USART_printf(USART2,"this string out from uart2 \r\n");
+		LED1 = !LED1;
+		ESP8266_SendString ( DISABLE, "hello from esp8266", sizeof("hello from esp8266"),  Multiple_ID_0);
+		delay_ms(1000);
+		recStr = ESP8266_ReceiveString ( DISABLE);
+		ESP8266_SendString ( DISABLE, recStr, strlen(recStr),  Multiple_ID_0);
+		delay_ms(1000);
 	}
 	
 }

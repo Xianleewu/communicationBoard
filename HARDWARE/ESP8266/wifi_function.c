@@ -1,6 +1,7 @@
 #include "wifi_function.h"
 #include "wifi_config.h"
 #include "delay.h"
+#include "led.h"
 
 #include <string.h> 
 #include <stdbool.h>
@@ -59,9 +60,12 @@ void ESP8266_AT_Test ( void )
 {
 	ESP8266_RST_HIGH_LEVEL();
 	
-	delay_ms ( 1500 ); 
+	delay_ms ( 100 ); 
 	
-	while ( ! ESP8266_Cmd ( "AT", "OK", NULL, 200) );  	
+	while ( ! ESP8266_Cmd ( "AT", "OK", NULL, 2) )
+	{
+		LED0 = !LED0;  	
+	}
 
 }
 
@@ -254,7 +258,6 @@ bool ESP8266_StartOrShutServer ( FunctionalState enumMode, char * pPortNum, char
 		return ( ESP8266_Cmd ( cCmd1, "OK", 0, 500 ) &&
 						 ESP8266_Cmd ( cCmd2, "OK", 0, 500 ) );
 	}
-	
 	else
 	{
 		sprintf ( cCmd1, "AT+CIPSERVER=%d,%s", 0, pPortNum );
@@ -300,20 +303,18 @@ bool ESP8266_SendString ( FunctionalState enumEnUnvarnishTx, char * pStr, u32 ul
 		
 	if ( enumEnUnvarnishTx )
 		ESP8266_Usart ( "%s", pStr );
-
-	
 	else
 	{
 		if ( ucId < 5 )
-			sprintf ( cStr, "AT+CIPSEND=%d,%d", ucId, ulStrLength + 2 );
+			sprintf ( cStr, "AT+CIPSEND=%d,%d", ucId, ulStrLength + 1);
 
 		else
-			sprintf ( cStr, "AT+CIPSEND=%d", ulStrLength + 2 );
+			sprintf ( cStr, "AT+CIPSEND=%d", ulStrLength + 1);
 		
 		ESP8266_Cmd ( cStr, "> ", 0, 1000 );
 
 		bRet = ESP8266_Cmd ( pStr, "SEND OK", 0, 1000 );
-  }
+	}
 	
 	return bRet;
 
